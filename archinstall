@@ -1,0 +1,122 @@
+#!/bin/bash
+
+set -e
+
+clear
+
+if ! ping -c 1 google.com >/dev/null 2>&1; then
+iwctl device list
+read -p "Which of the devices do you want to use?: " NETWORKDEVICE
+iwctl device $NETWORKDEVICE set-property Powered on
+iwctl station $NETWORKDEVICE scan
+iwctl station $NETWORKDEVICE get-networks
+read -p "Which of the networks do you want to connect to?: " NETWORK
+iwctl station $NETWORKDEVICE connect $NETWORK
+fi
+
+pacman -Syy
+
+clear
+
+echo "Available disks:"
+fdisk -l | grep "Disk /dev/"
+read -p "Enter the disk to partition (e.g., sda, nvme0n1): " DISK
+
+if [[ $DISK == nvme* ]]; then
+    PART_SUFFIX="p"
+else
+    PART_SUFFIX=""
+fi
+
+
+#---------------------Varible.Set.Above-----------------------------
+#---------------------Varible.Act.Below-----------------------------
+
+(
+echo g
+echo n
+echo
+echo
+echo +1G
+echo y
+echo t
+echo EFI System
+echo n
+echo
+echo
+echo +4G
+echo n
+echo
+echo
+echo
+echo w
+) | fdisk /dev/$DISK
+
+mkfs.fat -F 32 /dev/${DISK}${PART_SUFFIX}1
+mkswap /dev/${DISK}${PART_SUFFIX}2
+mkfs.ext4 /dev/${DISK}${PART_SUFFIX}3
+
+mkdir -p /mnt/boot
+mount /dev/${DISK}${PART_SUFFIX}1 /mnt/boot
+swapon /dev/${DISK}${PART_SUFFIX}2
+mount /dev/${DISK}${PART_SUFFIX}3 /mnt
+
+pacstrap -K /mnt base base-devel linux linux-firmware fastfetch htop nano steam vlc kde-connect flameshot git alacritty picom awesome networkmanager iwd xorg-server xorg-apps xorg-xinit nvidia-dkms nvidia-settings nvidia-utils flatpak
+
+genfstab -U /mnt >> /mnt/etc/fstab
+
+arch-chroot /mnt /bin/bash <<EOF
+
+locale-gen
+
+ln -sf /usr/share/zoneinfo/Europe/Stockholm /etc/localtime
+
+hwclock --systohc
+
+echo "LANG=en_US.UTF-8" > /etc/locale.conf
+
+echo "KEYMAP=sv-latin1" > /etc/vconsole.conf
+
+mkinitcpio -P
+
+echo "root:0055" | chpasswd
+
+useradd -m -G wheel -s /bin/bash Eddie
+echo "Eddie:0055" | chpasswd
+
+echo "VenerableCreator" >> /etc/hostname
+
+bootctl install
+
+cat <<EOL > /boot/loader/loader.conf
+default arch
+timeout 3
+editor 0
+EOL
+
+mkdir -p /boot/loader/entries
+cat <<EOL > /boot/loader/entries/arch.conf
+title Arch Linux
+linux /vmlinuz-linux
+initrd /initramfs-linux.img
+options root=PARTUUID=$(blkid -s PARTUUID -o value /dev/${DISK}${PART_SUFFIX}3) rw
+EOL
+
+pacman -S --needed git base-devel
+git clone https://aur.archlinux.org/yay.git
+cd yay
+makepkg -si
+
+cd ~
+
+wget https://drive.google.com/drive/folders/1bVZYk0KfYC7sV5qxb4qdArlEtp1nQPLG?usp=sharing
+
+chmod +x arch/usr/local/bin/*
+
+mv arch/* /
+
+yay -S brave-bin minecraft-launcher curseforge vesktop --noconfirm
+
+flatpak install flathub com.obsproject.ObsidianStudio
+
+EOF
