@@ -550,7 +550,7 @@ fi
 pacstrap -K /mnt base base-devel linux linux-firmware $DisServ $dewmPac $term $driver $userpacs fastfetch htop pavucontrol git networkmanager iwd flatpak
 
 genfstab -U /mnt >> /mnt/etc/fstab
-#yeet
+
 arch-chroot /mnt /bin/bash <<EOF
 
 locale-gen
