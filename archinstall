@@ -19,7 +19,7 @@ clear
 sure1=n
 sure2=n
 sure3=n
-sure4=n
+sure4=n #this is fun
 
 while [[ ! ($sure1 == y && $sure2 == y && $sure3 == y && $sure4 == y || $sure1 == Y && $sure2 == Y && $sure3 == Y && $sure4 == Y || $sure1 == "" && $sure2 == "" && $sure3 == "" && $sure4 == "") ]]; do
     clear
