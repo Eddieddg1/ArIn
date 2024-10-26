@@ -124,11 +124,11 @@ if [[ $DISSERV == xorg ]]; then
     if [[ $dewm == de || $dewm == DE ]]; then
         echo "Desktop Enviroments: $de"
         echo "Window Managers: $wm"
-        read -p "" dewmsel
+        read -p "Select which de/wm: " dewmsel
     else
         echo "Window Managers: $wm"
         echo "Desktop Enviroments: $de"
-        read -p "" dewmsel
+        read -p "Select which de/wm: " dewmsel
     fi
 elif [[ $DISSERV == wayland ]]; then
     read -p "Desktop Enviroments then Window Managers or other way around? de/wm: " dewm
@@ -140,11 +140,11 @@ elif [[ $DISSERV == wayland ]]; then
     if [[ $dewm == de || $dewm == DE ]]; then
         echo "Desktop Enviroments: $de"
         echo "Window Managers: $wm"
-        read -p "" dewmsel
+        read -p "Select which de/wm: " dewmsel
     else
         echo "Window Managers: $wm"
         echo "Desktop Enviroments: $de"
-        read -p "" dewmsel
+        read -p "Select which de/wm: " dewmsel
     fi
 fi
 
