@@ -347,11 +347,101 @@ if [[ $isinPacman == true && $isinAur == true ]]; then
     isinAur=false
 elif [[ $isinPacman == false && $isinAur == false ]]; then
     isinGit=true
+elif [[ $isinPacman == true ]]; then
+    dewmPac=$packageName
+elif [[ $isinAur == true ]]; then
+    dewmAur=$packageName
 fi
 
 clear
 
+read -p "What terminal do you want to use? Please enter pacman package name.(Blank for alacritty): " term
 
+if [[ $term == "" ]]; then
+    term=alacritty
+fi
+
+clear
+
+read -p "Amd, Nvidia or Intel?: " gpuvendor
+
+while [[ ! ($gpuvendor == Intel || $gpuvendor == intel || $gpuvendor == amd || $gpuvendor == Amd || $gpuvendor == nvidia || $gpuvendor == Nvidia) ]]; do
+        read -p "Amd, Nvidia or Intel?: " gpuvendor
+done
+
+read -p "Do you want Open-Source Grapichs Drivers? y/n: " gpudriver
+
+if [[ $gpudriver == y || $gpudriver == Y || $gpudriver == "" ]]; then
+    if [[ $gpuvendor == amd || $gpuvendor == Amd ]]; then
+        gpudrev=amd-open
+    elif [[ $gpuvendor == nvidia || $gpuvendor == Nvidia ]]; then
+        gpudrev=nvidia-open
+    elif [[ $gpuvendor == Intel || $gpuvendor == intel ]]; then
+        gpudrev=intel-open
+    fi
+elif [[ $gpudriver == n || $gpudriver == N ]]; then
+    if [[ $gpuvendor == amd || $gpuvendor == Amd ]]; then
+        gpudrev=amd-closed
+    elif [[ $gpuvendor == nvidia || $gpuvendor == Nvidia ]]; then
+        gpudrev=nvidia-closed
+    elif [[ $gpuvendor == Intel || $gpuvendor == intel ]]; then
+        gpudrev=intel-closed
+    fi
+fi
+
+if [[ $gpudrev == amd-open ]]; then
+    read -p "Do you have a radeon? y/n: " amdrad
+    if [[ $amdrad == y || $amdrad == Y || $amdrad == "" ]]; then
+        read -p "Is it R9 200 or newer? If older write old, if not leave blank: " amdage
+    fi
+    if [[ $amdage == old ]]; then
+        driver="xf86-video-ati mesa vulkan-radeon"
+    else
+        driver="xf86-video-amdgpu mesa vulkan-radeon"
+    fi
+elif [[ $gpudrev == amd-closed ]]; then
+    echo "Man figure it out."
+fi
+
+if [[ $gpudrev == nvidia-open ]]; then
+    read -p "Do you want useable drivers? y/n: " nvidiause
+    if [[ $nvidiause == n || $nvidiause == N ]]; then
+        driver="xf86-video-nouveau nvidia-settings nvidia-utils mesa vulkan-nvidia"
+    elif [[ $nvidiause == y || $nvidiause == Y || $nvidiause == "" ]]; then
+        driver="nvidia-dkms nvidia-settings nvidia-utils mesa vulkan-nvidia"
+    fi
+elif [[ $gpudrev == nvidia-closed ]]; then
+    driver="nvidia nvida-settings nvidia-utils mesa vulkan-nvidia"
+fi
+
+if [[ $gpudrev == intel-open ]]; then
+    read -p "Is you intel gpu older than 2009? y/n: " intelage
+    if [[ $intelage == y || $intelage == Y || $intelage == "" ]]; then
+        echo "..."
+        driver="xf86-video-intel mesa"
+    else
+        driver="mesa"
+    fi
+elif [[ $gpudrev == intel-closed ]]; then
+    echo "Man figure it out."
+fi
+
+clear
+
+read -p "What pacman packages do you want to install? (note: aur packages are after this): " userpacs
+if [[ $dewmAur ]]; then
+    echo "Note: without an aur helper you cannot install selected de/wm."
+fi
+read -p "Do you want an aur helper? y/n: " aurhelp
+if [[ $aurhelp == y || $aurhelp == Y || $aurhelp == "" ]]; then
+    echo "Here are your choices: yay, paru, pikaur, trizen and aura"
+    read -p "If these do not tickle your fancy enter, no: " aurchoice
+    while [[ ! ($aurchoice == yay || $aurchoice == paru || $aurchoice == pikaur || $aurchoice == trizen || $aurchoice == aura || $aurchoice == no) ]]; do
+        read -p "If these do not tickle your fancy enter, no: " aurchoice
+    done
+else
+    echo "If you do not install an aur helper now you can install one when booted."
+fi
 
 clear
 
@@ -454,7 +544,7 @@ else
     mount /dev/${DISK}${PART_SUFFIX}2 /mnt
 fi
 
-pacstrap -K /mnt base base-devel linux linux-firmware $DisServ fastfetch htop pavucontrol git $term networkmanager iwd nvidia-dkms nvidia-settings nvidia-utils flatpak
+pacstrap -K /mnt base base-devel linux linux-firmware $DisServ $dewmPac $term $driver $userpacs fastfetch htop pavucontrol git networkmanager iwd flatpak
 
 genfstab -U /mnt >> /mnt/etc/fstab
 
