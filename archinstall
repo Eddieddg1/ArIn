@@ -28,6 +28,26 @@ else
     PART_SUFFIX=""
 fi
 
+clear
+
+reap -p "Do you want a swap partition?: " swappie
+reap -p "Swap size.Just enter a number, said number will represent GB.(at least 4): " swappieSize
+if [[ $swappieSize < 4 ]]; then
+echo "Too small, I said at least "4"."
+fi
+reap -p "Do you want a seperate "/home" partition?: " YesRoot
+reap -p "Root partition size. Just enter a number, said number will represent GB.(at least 30): " RootSize
+if [[]]
+
+
+clear
+
+read -p "Username: " Username
+read -p "User Password: " UserPassword
+read -p "Root password: " RootPassword
+read -p "Hostname: " Hostname
+
+clear
 
 #---------------------Varible.Set.Above-----------------------------
 #---------------------Varible.Act.Below-----------------------------
@@ -41,27 +61,59 @@ echo +1G
 echo y
 echo t
 echo EFI System
-echo n
-echo
-echo
-echo +4G
-echo n
-echo
-echo
-echo
 echo w
 ) | fdisk /dev/$DISK
+if [[ $swappie == y | $swappie == Y | $swappie == "" ]]; then
+(
+    echo n
+    echo
+    echo
+    echo +4G
+    echo w
+    ) | fdisk /dev/$DISK
+fi
+if [[ $YesRoot == y | $YesRoot == Y | $YesRoot == "" ]]; then
+    (
+    echo n
+    echo
+    echo
+    echo +"$RootSize"G
+    echo n
+    echo
+    echo
+    echo
+    echo w
+    ) | fdisk /dev/$DISK
+else
+    (
+    echo n
+    echo
+    echo
+    echo
+    echo w
+    ) | fdisk /dev/$DISK
+fi
 
 mkfs.fat -F 32 /dev/${DISK}${PART_SUFFIX}1
-mkswap /dev/${DISK}${PART_SUFFIX}2
-mkfs.ext4 /dev/${DISK}${PART_SUFFIX}3
+if [[ $swappie == y | $swappie == Y | $swappie == "" ]]; then
+    mkswap /dev/${DISK}${PART_SUFFIX}2
+    mkfs.ext4 /dev/${DISK}${PART_SUFFIX}3
+    if [[ $YesRoot == y | $YesRoot == Y | $YesRoot == "" ]]; then
+        mkfs.ext4 /dev/${DISK}${PART_SUFFIX}4
+    fi
+elif [[ $YesRoot == y | $YesRoot == Y | $NoRoot == "" ]]; then
+    mkfs.ext4 /dev/${DISK}${PART_SUFFIX}2
+    mkfs.ext4 /dev/${DISK}${PART_SUFFIX}3
+else
+    mkfs.ext4 /dev/${DISK}${PART_SUFFIX}2
+fi
 
 mkdir -p /mnt/boot
 mount /dev/${DISK}${PART_SUFFIX}1 /mnt/boot
 swapon /dev/${DISK}${PART_SUFFIX}2
 mount /dev/${DISK}${PART_SUFFIX}3 /mnt
 
-pacstrap -K /mnt base base-devel linux linux-firmware fastfetch htop nano steam vlc kde-connect flameshot git alacritty picom awesome networkmanager iwd xorg-server xorg-apps xorg-xinit nvidia-dkms nvidia-settings nvidia-utils flatpak
+pacstrap -K /mnt base base-devel linux linux-firmware fastfetch htop wayland river pavucontrol carla nano steam vlc kde-connect flameshot git alacritty picom awesome networkmanager iwd xorg-server xorg-apps xorg-xinit nvidia-dkms nvidia-settings nvidia-utils flatpak
 
 genfstab -U /mnt >> /mnt/etc/fstab
 
@@ -79,12 +131,12 @@ echo "KEYMAP=sv-latin1" > /etc/vconsole.conf
 
 mkinitcpio -P
 
-echo "root:0055" | chpasswd
+echo "root:$RootPassword" | chpasswd
 
-useradd -m -G wheel -s /bin/bash Eddie
-echo "Eddie:0055" | chpasswd
+useradd -m -G wheel -s /bin/bash $Username
+echo "$Username:$UserPassword" | chpasswd
 
-echo "VenerableCreator" >> /etc/hostname
+echo "$Hostname" >> /etc/hostname
 
 bootctl install
 
@@ -102,18 +154,18 @@ initrd /initramfs-linux.img
 options root=PARTUUID=$(blkid -s PARTUUID -o value /dev/${DISK}${PART_SUFFIX}3) rw
 EOL
 
-pacman -S --needed git base-devel
 git clone https://aur.archlinux.org/yay.git
 cd yay
 makepkg -si
 
 cd ~
+rm -rf yay
 
-wget https://drive.google.com/drive/folders/1bVZYk0KfYC7sV5qxb4qdArlEtp1nQPLG?usp=sharing
+ln -s /usr/local/bin $HOME/.path
 
-chmod +x arch/usr/local/bin/*
+# chmod +x arch/usr/local/bin/*
 
-mv arch/* /
+# mv arch/* /
 
 yay -S brave-bin minecraft-launcher curseforge vesktop --noconfirm
 
