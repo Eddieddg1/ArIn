@@ -1,7 +1,5 @@
 #!/bin/bash
 
-set -e
-
 clear
 
 if ! ping -c 1 google.com >/dev/null 2>&1; then
@@ -97,7 +95,7 @@ fi
 clear
 
 read -p "Do you want Wayland or Xorg(X11)?: " wayorg
-while [[ ! ($wayorg == wayland || $wayorg == xorg || $wayorg = x11 || $wayorg = X11 || $wayorg = Xorg || $wayorg = Wayland) ]]; do
+while [[ ! ($wayorg == wayland || $wayorg == xorg || $wayorg == x11 || $wayorg == X11 || $wayorg == Xorg || $wayorg == Wayland) ]]; do
     echo "Wayland or Xorg"
     read -p "Please, copy one of the options above: " wayorg
 done
@@ -119,9 +117,9 @@ echo "Also, I had chatGpt give me these results."
 if [[ $DISSERV == xorg ]]; then
     read -p "Desktop Enviroments then Window Managers or other way around? de/wm: " dewm
 
-    de="KDE Plasma, GNOME, Xfce, LXQt, Cinnamon, MATE, Deepin, Budgie, Trinity, Enlightenment, Pantheon, UKUI, Lumina, Sugar and ROX Desktop"
+    de="KDE Plasma, GNOME, Xfce, LXQt, Cinnamon, MATE, Deepin, Budgie, Trinity, Enlightenment, Pantheon, UKUI, Lumina and Sugar"
 
-    wm="i3, bspwm, Awesome, xmonad, dwm, spectrwm, herbstluftwm, qtile, leftwm, cwm, Openbox, Fluxbox, FVWM, IceWM and JWM"
+    wm="i3, bspwm, awesome, xmonad, dwm, spectrwm, herbstluftwm, qtile, leftwm, Openbox, FVWM, IceWM and JWM"
 
     if [[ $dewm == de || $dewm == DE ]]; then
         echo "Desktop Enviroments: $de"
@@ -137,7 +135,7 @@ elif [[ $DISSERV == wayland ]]; then
 
     de="KDE Plasma, GNOME, Phosh, Cinnamon, LXQt and Budgie"
 
-    wm="Sway, River, Wayfire, Hyprland, Labwc, Hikari, Cage, Cagebreak, Velox, dwl and Wio"
+    wm="Sway, River, Wayfire, Hyprland, Labwc, Hikari, Cage, Cagebreak, Velox and dwl"
 
     if [[ $dewm == de || $dewm == DE ]]; then
         echo "Desktop Enviroments: $de"
@@ -148,6 +146,207 @@ elif [[ $DISSERV == wayland ]]; then
         echo "Desktop Enviroments: $de"
         read -p "" dewmsel
     fi
+fi
+
+case $dewmsel in
+    KDE Plasma)
+        packageName="plasma"
+        isinPacman=true
+        isinAur=false
+    ;;
+    GNOME)
+        packageName="gnome"
+        isinPacman=true
+        isinAur=false
+    ;;
+    Xfce)
+        packageName="Xfce4"
+        isinPacman=true
+        isinAur=false
+    ;;
+    LXQt)
+        packageName="lxqt"
+        isinPacman=true
+        isinAur=false
+    ;;
+    Cinnamon)
+        packageName="cinnamon"
+        isinPacman=true
+        isinAur=false
+    ;;
+    MATE)
+        packageName="mate"
+        isinPacman=true
+        isinAur=false
+    ;;
+    Deepin)
+        packageName="deepin-desktop"
+        isinPacman=true
+        isinAur=false
+    ;;
+    Budgie)
+        packageName="budgie-desktop budgie-extras"
+        isinPacman=true
+        isinAur=false
+    ;;
+    Trinity)
+        packageName="trinity"
+        isinPacman=false
+        isinAur=true
+    ;;
+    Enlightenment)
+        packageName="enlightenment"
+        isinPacman=true
+        isinAur=false
+    ;;
+    Pantheon)
+        packageName="pantheon"
+        isinPacman=true
+        isinAur=false
+    ;;
+    UKUI)
+        packageName="ukui"
+        isinPacman=true
+        isinAur=false
+    ;;
+    Lumina)
+        packageName="lumina-desktop"
+        isinPacman=false
+        isinAur=true
+    ;;
+    Sugar)
+        packageName="sugar"
+        isinPacman=true
+        isinAur=false
+    ;;
+    Phosh)
+        packageName="phosh"
+        isinPacman=true
+        isinAur=false
+    ;;
+    i3)
+        packageName="i3 dmenu"
+        isinPacman=true
+        isinAur=false
+    ;;
+    bspwm)
+        packageName="bspwm sxhkd"
+        isinPacman=true
+        isinAur=false
+    ;;
+    awesome)
+        packageName="awesome"
+        isinPacman=true
+        isinAur=false
+    ;;
+    xmonad)
+        packageName="xmonad"
+        isinPacman=true
+        isinAur=false
+    ;;
+    dwm)
+        packageName="dwm"
+        isinPacman=false
+        isinAur=true
+    ;;
+    spectrwm)
+        packageName="spectrwm"
+        isinPacman=false
+        isinAur=true
+    ;;
+    herbstluftwm)
+        packageName="herbstluftwm"
+        isinPacman=true
+        isinAur=false
+    ;;
+    qtile)
+        packageName="qtile"
+        isinPacman=true
+        isinAur=false
+    ;;
+    leftwm)
+        packageName="leftwm"
+        isinPacman=false
+        isinAur=true
+    ;;
+    Openbox)
+        packageName="openbox"
+        isinPacman=true
+        isinAur=false
+    ;;
+    FVWM)
+        packageName="fvwm3"
+        isinPacman=false
+        isinAur=true
+    ;;
+    IceWM)
+        packageName="icewm"
+        isinPacman=true
+        isinAur=false
+    ;;
+    JWM)
+        packageName="jwc"
+        isinPacman=false
+        isinAur=true
+    ;;
+    Sway)
+        packageName="sway"
+        isinPacman=true
+        isinAur=false
+    ;;
+    River)
+        packageName="river"
+        isinPacman=true
+        isinAur=false
+    ;;
+    Wayfire)
+        packageName="wayfire"
+        isinPacman=false
+        isinAur=true #please
+    ;;
+    Hyprland)
+        packageName="hyprland"
+        isinPacman=true
+        isinAur=false
+    ;;
+    Labwc)
+        packageName="labwc"
+        isinPacman=false
+        isinAur=true
+    ;;
+    Hikari)
+        packageName="hikari"
+        isinPacman=false
+        isinAur=true
+    ;;
+    Cage)
+        packageName="cage"
+        isinPacman=true
+        isinAur=false
+    ;;
+    Cagebreak)
+        packageName="cagebreak"
+        isinPacman=false
+        isinAur=true
+    ;;
+    Velox)
+        packageName="velox-git"
+        isinPacman=false
+        isinAur=true
+    ;;
+    dwl)
+        packageName="dwl"
+        isinPacman=false
+        isinAur=true
+    ;;
+    *)
+    ;;
+esac
+
+if [[ $isinPacman == true && $isinAur == true ]]; then
+    isinAur=false
+elif [[ $isinPacman == false && $isinAur == false ]]; then
+    isinGit=true
 fi
 
 clear
