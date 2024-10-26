@@ -18,9 +18,31 @@ pacman -Syy
 
 clear
 
-echo "Available disks:"
-fdisk -l | grep "Disk /dev/"
-read -p "Enter the disk to partition (e.g., sda, nvme0n1): " DISK
+sure1=n
+sure2=n
+sure3=n
+sure4=n
+
+while [[ ! ($sure1 == y && $sure2 == y && $sure3 == y && $sure4 == y || $sure1 == Y && $sure2 == Y && $sure3 == Y && $sure4 == Y || $sure1 == "" && $sure2 == "" && $sure3 == "" && $sure4 == "") ]]; do
+    clear
+
+    echo "Available disks:"
+    fdisk -l | grep "Disk /dev/"
+    read -p "Enter the disk to partition (e.g., sda, nvme0n1): " DISK
+
+    if [[ ! $DISK =~ ^(sd[a-z]|nvme[0-9]n[0-9]|vd[a-z]|md[0-9]|loop[0-9])$ ]]; then
+        read -p "Are you sure this is the one? y/n: " sure1
+        read -p "Please double check just in case. y/n: " sure2
+        read -p "100% sure? y/n: " sure3
+        read -p "1000% sure? y/n: " sure4
+    elif [[ $DISK =~ ^(sd[a-z]|nvme[0-9]n[0-9]|vd[a-z]|md[0-9]|loop[0-9])$ ]]; then
+        read -p "Are you sure? y/n: " sure1
+        sure2=$sure1
+        sure3=$sure2
+        sure4=$sure3
+        break
+    fi
+done
 
 if [[ $DISK == nvme* ]]; then
     PART_SUFFIX="p"
@@ -30,18 +52,57 @@ fi
 
 clear
 
-reap -p "Do you want a swap partition?: " swappie
-reap -p "Swap size.Just enter a number, said number will represent GB.(at least 4): " swappieSize
-if [[ $swappieSize < 4 ]]; then
-echo "Too small, I said at least "4"."
+read -p "Do you want a swap partition? y/n: " swappie
+if [[ $swappie == y || $swappie == Y || $swappie == "" ]]; then
+    read -p "Swap size. Just enter a number, said number will represent GB.(at least 4): " swappieSize
+    swAttempts=0
+    while [[ $swappieSize -lt 4 ]]; do
+        echo "Too small, I said at least '4'."
+        read -p "Swap size. Just enter a number, said number will represent GB.(at least 4): " swappieSize
+        ((swAttempts++))
+        if [[ $swAttempts -ge 10 ]]; then
+            swappie=n
+            break
+        elif [[ $swAttempts -ge 3 ]]; then
+            read -p "Do you really want a swap partition? y/n: " reallySwap
+            if [[ $reallySwap == n || $reallySwap == N ]]; then
+                swappie=n
+                break
+            fi
+        fi
+    done
 fi
-reap -p "Do you want a seperate "/home" partition?: " YesRoot
-reap -p "Root partition size. Just enter a number, said number will represent GB.(at least 30): " RootSize
-if [[]]
 
+read -p "Do you want a seperate '/home' partition? y/n: " YesHome
+if [[ $YesHome == y || $YesHome == Y || $YesHome == "" ]]; then
+    read -p "Root partition size. Just enter a number, said number will represent GB.(at least 30): " RootSize
+    rtAttempts=0
+    while [[ $RootSize -lt 30 ]]; do
+        echo "Too small, I said at least '30'."
+        read -p "Root partition size. Just enter a number, said number will represent GB.(at least 30): " RootSize
+        ((rtAttempts++))
+        if [[ $rtAttempts -ge 10 ]]; then
+            YesHome=n
+            break
+        elif [[ $rtAttempts -ge 3 ]]; then
+            read -p "Do you really want a swap partition? y/n: " reallyHome
+            if [[ $reallyHome == n || $reallyHome == N ]]; then
+                YesHome=n
+                break
+            fi
+        fi
+    done
+fi
 
 clear
 
+read -p "Do you want Wayland or Xorg(X11)?: " wayorg
+while [[ ! ($wayorg == wayland || $wayorg == xorg || $wayorg = x11 || $wayorg = X11 || $wayorg = Xorg || $wayorg = Wayland) ]]; do
+    echo "Wayland or Xorg"
+    read -p "Please, copy one of the options above: " wayorg
+done
+
+clear
 read -p "Username: " Username
 read -p "User Password: " UserPassword
 read -p "Root password: " RootPassword
@@ -63,16 +124,16 @@ echo t
 echo EFI System
 echo w
 ) | fdisk /dev/$DISK
-if [[ $swappie == y | $swappie == Y | $swappie == "" ]]; then
+if [[ $swappie == y || $swappie == Y || $swappie == "" ]]; then
 (
     echo n
     echo
     echo
-    echo +4G
+    echo +"$swappieSize"G
     echo w
     ) | fdisk /dev/$DISK
 fi
-if [[ $YesRoot == y | $YesRoot == Y | $YesRoot == "" ]]; then
+if [[ $YesHome == y || $YesHome == Y || $YesHome == "" ]]; then
     (
     echo n
     echo
@@ -95,13 +156,13 @@ else
 fi
 
 mkfs.fat -F 32 /dev/${DISK}${PART_SUFFIX}1
-if [[ $swappie == y | $swappie == Y | $swappie == "" ]]; then
+if [[ $swappie == y || $swappie == Y || $swappie == "" ]]; then
     mkswap /dev/${DISK}${PART_SUFFIX}2
     mkfs.ext4 /dev/${DISK}${PART_SUFFIX}3
-    if [[ $YesRoot == y | $YesRoot == Y | $YesRoot == "" ]]; then
+    if [[ $YesHome == y || $YesHome == Y || $YesHome == "" ]]; then
         mkfs.ext4 /dev/${DISK}${PART_SUFFIX}4
     fi
-elif [[ $YesRoot == y | $YesRoot == Y | $NoRoot == "" ]]; then
+elif [[ $YesHome == y || $YesHome == Y || $YesHome == "" ]]; then
     mkfs.ext4 /dev/${DISK}${PART_SUFFIX}2
     mkfs.ext4 /dev/${DISK}${PART_SUFFIX}3
 else
@@ -110,8 +171,19 @@ fi
 
 mkdir -p /mnt/boot
 mount /dev/${DISK}${PART_SUFFIX}1 /mnt/boot
-swapon /dev/${DISK}${PART_SUFFIX}2
-mount /dev/${DISK}${PART_SUFFIX}3 /mnt
+if [[ $swappie == y || $swappie == Y || $swappie == "" ]]; then
+    swapon /dev/${DISK}${PART_SUFFIX}2
+    mount /dev/${DISK}${PART_SUFFIX}3 /mnt
+    if [[ $YesHome == y || $YesHome == Y || $YesHome == "" ]]; then
+        mkdir /mnt/home
+        mount /dev/${DISK}${PART_SUFFIX}4 /mnt/home
+    fi
+elif [[ $YesHome == y || $YesHome == Y || $YesHome == "" ]]; then
+    mkdir /mnt/home
+    mount /dev/${DISK}${PART_SUFFIX}4 /mnt/home
+else
+    mount /dev/${DISK}${PART_SUFFIX}2 /mnt
+fi
 
 pacstrap -K /mnt base base-devel linux linux-firmware fastfetch htop wayland river pavucontrol carla nano steam vlc kde-connect flameshot git alacritty picom awesome networkmanager iwd xorg-server xorg-apps xorg-xinit nvidia-dkms nvidia-settings nvidia-utils flatpak
 
