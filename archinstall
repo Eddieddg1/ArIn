@@ -444,6 +444,8 @@ else
     echo "If you do not install an aur helper now you can install one when booted."
 fi
 
+read -p "What aur packages do you want to install?: " aurpacs
+
 clear
 
 unsure=n
@@ -586,21 +588,60 @@ initrd /initramfs-linux.img
 options root=PARTUUID=$(blkid -s PARTUUID -o value /dev/${DISK}${PART_SUFFIX}3) rw
 EOL
 
-git clone https://aur.archlinux.org/yay.git
-cd yay
-makepkg -si
+case $aurchoice in
+    yay)
+        sudo pacman -S --needed base-devel git
+        git clone https://aur.archlinux.org/yay.git
+        cd yay
+        makepkg -si
 
-cd ~
-rm -rf yay
+        cd ~
+        rm -rf yay
+    ;;
+    paru)
+        sudo pacman -S --needed base-devel git
+        git clone https://aur.archlinux.org/paru.git
+        cd paru
+        makepkg -si
+
+        cd ~
+        rm -rf paru
+    ;;
+    pikaur)
+        sudo pacman -S --needed base-devel git
+        git clone https://aur.archlinux.org/pikaur.git
+        cd pikaur
+        makepkg -fsri
+
+        cd ~
+        rm -rf pikaur
+    ;;
+    trizen)
+        sudo pacman -S --needed base-devel git
+        git clone https://aur.archlinux.org/trizen.git
+        cd trizen
+        makepkg -si
+
+        cd ~
+        rm -rf trizen
+    ;;
+    aura)
+        sudo pacman -S --needed base-devel git
+        git clone https://aur.archlinux.org/aura.git
+        cd aura
+        makepkg -si
+
+        cd ~
+        rm -rf aura
+    ;;
+    *)
+    ;;
+esac
+
+if [[ $aurchoice != no ]]; then
+    $aurchoice -S $dewmAur $aurpacs
+fi
 
 ln -s /usr/local/bin $HOME/.path
-
-# chmod +x arch/usr/local/bin/*
-
-# mv arch/* /
-
-yay -S brave-bin minecraft-launcher curseforge vesktop --noconfirm
-
-flatpak install flathub com.obsproject.ObsidianStudio
 
 EOF
