@@ -102,11 +102,77 @@ while [[ ! ($wayorg == wayland || $wayorg == xorg || $wayorg = x11 || $wayorg = 
     read -p "Please, copy one of the options above: " wayorg
 done
 
+if [[ $wayorg == wayland || $wayorg == Wayland ]]; then
+    DisServ="wayland"
+    DISSERV="wayland"
+elif [[ $wayorg == xorg || $wayorg == Xorg || $wayorg == x11 || $wayorg == X11 ]]; then
+    DisServ="xorg-server xorg-apps xorg-xinit"
+    DISSERV="xorg"
+fi
+
 clear
-read -p "Username: " Username
-read -p "User Password: " UserPassword
-read -p "Root password: " RootPassword
-read -p "Hostname: " Hostname
+
+echo "Here are the options if your choice is not here you can add it later when selecting packages."
+echo "If your selected de/wm is in the aur it will get installed almost last please do not worry."
+echo "Also, I had chatGpt give me these results."
+
+if [[ $DISSERV == xorg ]]; then
+    read -p "Desktop Enviroments then Window Managers or other way around? de/wm: " dewm
+
+    de="KDE Plasma, GNOME, Xfce, LXQt, Cinnamon, MATE, Deepin, Budgie, Trinity, Enlightenment, Pantheon, UKUI, Lumina, Sugar and ROX Desktop"
+
+    wm="i3, bspwm, Awesome, xmonad, dwm, spectrwm, herbstluftwm, qtile, leftwm, cwm, Openbox, Fluxbox, FVWM, IceWM and JWM"
+
+    if [[ $dewm == de || $dewm == DE ]]; then
+        echo "Desktop Enviroments: $de"
+        echo "Window Managers: $wm"
+        read -p "" dewmsel
+    else
+        echo "Window Managers: $wm"
+        echo "Desktop Enviroments: $de"
+        read -p "" dewmsel
+    fi
+elif [[ $DISSERV == wayland ]]; then
+    read -p "Desktop Enviroments then Window Managers or other way around? de/wm: " dewm
+
+    de="KDE Plasma, GNOME, Phosh, Cinnamon, LXQt and Budgie"
+
+    wm="Sway, River, Wayfire, Hyprland, Labwc, Hikari, Cage, Cagebreak, Velox, dwl and Wio"
+
+    if [[ $dewm == de || $dewm == DE ]]; then
+        echo "Desktop Enviroments: $de"
+        echo "Window Managers: $wm"
+        read -p "" dewmsel
+    else
+        echo "Window Managers: $wm"
+        echo "Desktop Enviroments: $de"
+        read -p "" dewmsel
+    fi
+fi
+
+clear
+
+unsure=n
+while [[ ! ($unsure == y || $unsure == Y || $unsure == "") ]]; do
+    read -p "Username: " Username
+    read -p "Are you sure? y/n: " unsure
+done
+upsure=n
+while [[ ! ($upsure == y || $upsure == Y || $upsure == "") ]]; do
+    read -p "User Password: " UserPassword
+    read -p "Are you sure? y/n: " upsure
+done
+rpsure=n
+while [[ ! ($rpsure == y || $rpsure == Y || $rpsure == "") ]]; do
+    read -p "Root password: " RootPassword
+    read -p "Are you sure? y/n: " rpsure
+done
+hnsure=n
+while [[ ! ($hnsure == y || $hnsure == Y || $hnsure == "") ]]; do
+    read -p "Hostname: " Hostname
+    echo "Preview (if using bash): [${Username}@${Hostname} ~]$"
+    read -p "Are you sure? y/n: " hnsure
+done
 
 clear
 
@@ -185,7 +251,7 @@ else
     mount /dev/${DISK}${PART_SUFFIX}2 /mnt
 fi
 
-pacstrap -K /mnt base base-devel linux linux-firmware fastfetch htop wayland river pavucontrol carla nano steam vlc kde-connect flameshot git alacritty picom awesome networkmanager iwd xorg-server xorg-apps xorg-xinit nvidia-dkms nvidia-settings nvidia-utils flatpak
+pacstrap -K /mnt base base-devel linux linux-firmware $DisServ fastfetch htop pavucontrol git $term networkmanager iwd nvidia-dkms nvidia-settings nvidia-utils flatpak
 
 genfstab -U /mnt >> /mnt/etc/fstab
 
