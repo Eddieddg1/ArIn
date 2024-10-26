@@ -23,7 +23,7 @@ sure4=n
 
 while [[ ! ($sure1 == y && $sure2 == y && $sure3 == y && $sure4 == y || $sure1 == Y && $sure2 == Y && $sure3 == Y && $sure4 == Y || $sure1 == "" && $sure2 == "" && $sure3 == "" && $sure4 == "") ]]; do
     clear
-
+#Yeet
     echo "Available disks:"
     fdisk -l | grep "Disk /dev/"
     read -p "Enter the disk to partition (e.g., sda, nvme0n1): " DISK
