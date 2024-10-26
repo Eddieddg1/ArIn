@@ -347,7 +347,7 @@ if [[ $isinPacman == true && $isinAur == true ]]; then
     isinAur=false
 elif [[ $isinPacman == false && $isinAur == false ]]; then
     isinGit=true
-elif [[ $isinPacman == true ]]; then
+if [[ $isinPacman == true ]]; then
     dewmPac=$packageName
 elif [[ $isinAur == true ]]; then
     dewmAur=$packageName
