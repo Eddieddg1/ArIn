@@ -1,5 +1,7 @@
 #!/bin/bash
 
+set -e
+
 clear
 
 if ! ping -c 1 google.com >/dev/null 2>&1; then
@@ -10,371 +12,23 @@ iwctl station $NETWORKDEVICE scan
 iwctl station $NETWORKDEVICE get-networks
 read -p "Which of the networks do you want to connect to?: " NETWORK
 iwctl station $NETWORKDEVICE connect $NETWORK
+
 fi
 
 pacman -Syy
 
 clear
 
-sure1=n
-sure2=n
-sure3=n
-sure4=n
-
-while [[ ! ($sure1 == y && $sure2 == y && $sure3 == y && $sure4 == y || $sure1 == Y && $sure2 == Y && $sure3 == Y && $sure4 == Y || $sure1 == "" && $sure2 == "" && $sure3 == "" && $sure4 == "") ]]; do
-    clear
-
-    echo "Available disks:"
-    fdisk -l | grep "Disk /dev/"
-    read -p "Enter the disk to partition (e.g., sda, nvme0n1): " DISK
-
-    if [[ ! $DISK =~ ^(sd[a-z]|nvme[0-9]n[0-9]|vd[a-z]|md[0-9]|loop[0-9])$ ]]; then
-        read -p "Are you sure this is the one? y/n: " sure1
-        read -p "Please double check just in case. y/n: " sure2
-        read -p "100% sure? y/n: " sure3
-        read -p "1000% sure? y/n: " sure4
-    elif [[ $DISK =~ ^(sd[a-z]|nvme[0-9]n[0-9]|vd[a-z]|md[0-9]|loop[0-9])$ ]]; then
-        read -p "Are you sure? y/n: " sure1
-        sure2=$sure1
-        sure3=$sure2
-        sure4=$sure3
-        break
-    fi
-done
+echo "Available disks:"
+fdisk -l | grep "Disk /dev/"
+read -p "Enter the disk to partition (e.g., sda, nvme0n1): " DISK
 
 if [[ $DISK == nvme* ]]; then
     PART_SUFFIX="p"
 else
     PART_SUFFIX=""
+
 fi
-
-clear
-
-read -p "Do you want a swap partition? y/n: " swappie
-if [[ $swappie == y || $swappie == Y || $swappie == "" ]]; then
-    read -p "Swap size. Just enter a number, said number will represent GB.(at least 4): " swappieSize
-    swAttempts=0
-    while [[ $swappieSize -lt 4 ]]; do
-        echo "Too small, I said at least '4'."
-        read -p "Swap size. Just enter a number, said number will represent GB.(at least 4): " swappieSize
-        ((swAttempts++))
-        if [[ $swAttempts -ge 10 ]]; then
-            swappie=n
-            break
-        elif [[ $swAttempts -ge 3 ]]; then
-            read -p "Do you really want a swap partition? y/n: " reallySwap
-            if [[ $reallySwap == n || $reallySwap == N ]]; then
-                swappie=n
-                break
-            fi
-        fi
-    done
-fi
-
-read -p "Do you want a seperate '/home' partition? y/n: " YesHome
-if [[ $YesHome == y || $YesHome == Y || $YesHome == "" ]]; then
-    read -p "Root partition size. Just enter a number, said number will represent GB.(at least 30): " RootSize
-    rtAttempts=0
-    while [[ $RootSize -lt 30 ]]; do
-        echo "Too small, I said at least '30'."
-        read -p "Root partition size. Just enter a number, said number will represent GB.(at least 30): " RootSize
-        ((rtAttempts++))
-        if [[ $rtAttempts -ge 10 ]]; then
-            YesHome=n
-            break
-        elif [[ $rtAttempts -ge 3 ]]; then
-            read -p "Do you really want a swap partition? y/n: " reallyHome
-            if [[ $reallyHome == n || $reallyHome == N ]]; then
-                YesHome=n
-                break
-            fi
-        fi
-    done
-fi
-
-clear
-
-read -p "Do you want Wayland or Xorg(X11)?: " wayorg
-while [[ ! ($wayorg == wayland || $wayorg == xorg || $wayorg == x11 || $wayorg == X11 || $wayorg == Xorg || $wayorg == Wayland) ]]; do
-    echo "Wayland or Xorg"
-    read -p "Please, copy one of the options above: " wayorg
-done
-
-if [[ $wayorg == wayland || $wayorg == Wayland ]]; then
-    DisServ="wayland"
-    DISSERV="wayland"
-elif [[ $wayorg == xorg || $wayorg == Xorg || $wayorg == x11 || $wayorg == X11 ]]; then
-    DisServ="xorg-server xorg-apps xorg-xinit"
-    DISSERV="xorg"
-fi
-
-clear
-
-echo "Here are the options if your choice is not here you can add it later when selecting packages."
-echo "If your selected de/wm is in the aur it will get installed almost last please do not worry."
-echo "Also, I had chatGpt give me these results."
-
-if [[ $DISSERV == xorg ]]; then
-    read -p "Desktop Enviroments then Window Managers or other way around? de/wm: " dewm
-
-    de="KDE Plasma, GNOME, Xfce, LXQt, Cinnamon, MATE, Deepin, Budgie, Trinity, Enlightenment, Pantheon, UKUI, Lumina and Sugar"
-
-    wm="i3, bspwm, awesome, xmonad, dwm, spectrwm, herbstluftwm, qtile, leftwm, Openbox, FVWM, IceWM and JWM"
-
-    if [[ $dewm == de || $dewm == DE ]]; then
-        echo "Desktop Enviroments: $de"
-        echo "Window Managers: $wm"
-        read -p "" dewmsel
-    else
-        echo "Window Managers: $wm"
-        echo "Desktop Enviroments: $de"
-        read -p "" dewmsel
-    fi
-elif [[ $DISSERV == wayland ]]; then
-    read -p "Desktop Enviroments then Window Managers or other way around? de/wm: " dewm
-
-    de="KDE Plasma, GNOME, Phosh, Cinnamon, LXQt and Budgie"
-
-    wm="Sway, River, Wayfire, Hyprland, Labwc, Hikari, Cage, Cagebreak, Velox and dwl"
-
-    if [[ $dewm == de || $dewm == DE ]]; then
-        echo "Desktop Enviroments: $de"
-        echo "Window Managers: $wm"
-        read -p "" dewmsel
-    else
-        echo "Window Managers: $wm"
-        echo "Desktop Enviroments: $de"
-        read -p "" dewmsel
-    fi
-fi
-
-case $dewmsel in
-    KDE Plasma)
-        packageName="plasma"
-        isinPacman=true
-        isinAur=false
-    ;;
-    GNOME)
-        packageName="gnome"
-        isinPacman=true
-        isinAur=false
-    ;;
-    Xfce)
-        packageName="Xfce4"
-        isinPacman=true
-        isinAur=false
-    ;;
-    LXQt)
-        packageName="lxqt"
-        isinPacman=true
-        isinAur=false
-    ;;
-    Cinnamon)
-        packageName="cinnamon"
-        isinPacman=true
-        isinAur=false
-    ;;
-    MATE)
-        packageName="mate"
-        isinPacman=true
-        isinAur=false
-    ;;
-    Deepin)
-        packageName="deepin-desktop"
-        isinPacman=true
-        isinAur=false
-    ;;
-    Budgie)
-        packageName="budgie-desktop budgie-extras"
-        isinPacman=true
-        isinAur=false
-    ;;
-    Trinity)
-        packageName="trinity"
-        isinPacman=false
-        isinAur=true
-    ;;
-    Enlightenment)
-        packageName="enlightenment"
-        isinPacman=true
-        isinAur=false
-    ;;
-    Pantheon)
-        packageName="pantheon"
-        isinPacman=true
-        isinAur=false
-    ;;
-    UKUI)
-        packageName="ukui"
-        isinPacman=true
-        isinAur=false
-    ;;
-    Lumina)
-        packageName="lumina-desktop"
-        isinPacman=false
-        isinAur=true
-    ;;
-    Sugar)
-        packageName="sugar"
-        isinPacman=true
-        isinAur=false
-    ;;
-    Phosh)
-        packageName="phosh"
-        isinPacman=true
-        isinAur=false
-    ;;
-    i3)
-        packageName="i3 dmenu"
-        isinPacman=true
-        isinAur=false
-    ;;
-    bspwm)
-        packageName="bspwm sxhkd"
-        isinPacman=true
-        isinAur=false
-    ;;
-    awesome)
-        packageName="awesome"
-        isinPacman=true
-        isinAur=false
-    ;;
-    xmonad)
-        packageName="xmonad"
-        isinPacman=true
-        isinAur=false
-    ;;
-    dwm)
-        packageName="dwm"
-        isinPacman=false
-        isinAur=true
-    ;;
-    spectrwm)
-        packageName="spectrwm"
-        isinPacman=false
-        isinAur=true
-    ;;
-    herbstluftwm)
-        packageName="herbstluftwm"
-        isinPacman=true
-        isinAur=false
-    ;;
-    qtile)
-        packageName="qtile"
-        isinPacman=true
-        isinAur=false
-    ;;
-    leftwm)
-        packageName="leftwm"
-        isinPacman=false
-        isinAur=true
-    ;;
-    Openbox)
-        packageName="openbox"
-        isinPacman=true
-        isinAur=false
-    ;;
-    FVWM)
-        packageName="fvwm3"
-        isinPacman=false
-        isinAur=true
-    ;;
-    IceWM)
-        packageName="icewm"
-        isinPacman=true
-        isinAur=false
-    ;;
-    JWM)
-        packageName="jwc"
-        isinPacman=false
-        isinAur=true
-    ;;
-    Sway)
-        packageName="sway"
-        isinPacman=true
-        isinAur=false
-    ;;
-    River)
-        packageName="river"
-        isinPacman=true
-        isinAur=false
-    ;;
-    Wayfire)
-        packageName="wayfire"
-        isinPacman=false
-        isinAur=true
-    ;;
-    Hyprland)
-        packageName="hyprland"
-        isinPacman=true
-        isinAur=false
-    ;;
-    Labwc)
-        packageName="labwc"
-        isinPacman=false
-        isinAur=true
-    ;;
-    Hikari)
-        packageName="hikari"
-        isinPacman=false
-        isinAur=true
-    ;;
-    Cage)
-        packageName="cage"
-        isinPacman=true
-        isinAur=false
-    ;;
-    Cagebreak)
-        packageName="cagebreak"
-        isinPacman=false
-        isinAur=true
-    ;;
-    Velox)
-        packageName="velox-git"
-        isinPacman=false
-        isinAur=true
-    ;;
-    dwl)
-        packageName="dwl"
-        isinPacman=false
-        isinAur=true
-    ;;
-    *)
-    ;;
-esac
-
-if [[ $isinPacman == true && $isinAur == true ]]; then
-    isinAur=false
-elif [[ $isinPacman == false && $isinAur == false ]]; then
-    isinGit=true
-fi
-
-clear
-
-unsure=n
-while [[ ! ($unsure == y || $unsure == Y || $unsure == "") ]]; do
-    read -p "Username: " Username
-    read -p "Are you sure? y/n: " unsure
-done
-upsure=n
-while [[ ! ($upsure == y || $upsure == Y || $upsure == "") ]]; do
-    read -p "User Password: " UserPassword
-    read -p "Are you sure? y/n: " upsure
-done
-rpsure=n
-while [[ ! ($rpsure == y || $rpsure == Y || $rpsure == "") ]]; do
-    read -p "Root password: " RootPassword
-    read -p "Are you sure? y/n: " rpsure
-done
-hnsure=n
-while [[ ! ($hnsure == y || $hnsure == Y || $hnsure == "") ]]; do
-    read -p "Hostname: " Hostname
-    echo "Preview (if using bash): [${Username}@${Hostname} ~]$"
-    read -p "Are you sure? y/n: " hnsure
-done
-
-clear
-
 #---------------------Varible.Set.Above-----------------------------
 #---------------------Varible.Act.Below-----------------------------
 
@@ -387,70 +41,28 @@ echo +1G
 echo y
 echo t
 echo EFI System
+echo n
+echo
+echo
+echo +4G
+echo n
+echo
+echo
+echo
 echo w
+
 ) | fdisk /dev/$DISK
-if [[ $swappie == y || $swappie == Y || $swappie == "" ]]; then
-(
-    echo n
-    echo
-    echo
-    echo +"$swappieSize"G
-    echo w
-    ) | fdisk /dev/$DISK
-fi
-if [[ $YesHome == y || $YesHome == Y || $YesHome == "" ]]; then
-    (
-    echo n
-    echo
-    echo
-    echo +"$RootSize"G
-    echo n
-    echo
-    echo
-    echo
-    echo w
-    ) | fdisk /dev/$DISK
-else
-    (
-    echo n
-    echo
-    echo
-    echo
-    echo w
-    ) | fdisk /dev/$DISK
-fi
 
 mkfs.fat -F 32 /dev/${DISK}${PART_SUFFIX}1
-if [[ $swappie == y || $swappie == Y || $swappie == "" ]]; then
-    mkswap /dev/${DISK}${PART_SUFFIX}2
-    mkfs.ext4 /dev/${DISK}${PART_SUFFIX}3
-    if [[ $YesHome == y || $YesHome == Y || $YesHome == "" ]]; then
-        mkfs.ext4 /dev/${DISK}${PART_SUFFIX}4
-    fi
-elif [[ $YesHome == y || $YesHome == Y || $YesHome == "" ]]; then
-    mkfs.ext4 /dev/${DISK}${PART_SUFFIX}2
-    mkfs.ext4 /dev/${DISK}${PART_SUFFIX}3
-else
-    mkfs.ext4 /dev/${DISK}${PART_SUFFIX}2
-fi
+mkswap /dev/${DISK}${PART_SUFFIX}2
+mkfs.ext4 /dev/${DISK}${PART_SUFFIX}3
 
 mkdir -p /mnt/boot
 mount /dev/${DISK}${PART_SUFFIX}1 /mnt/boot
-if [[ $swappie == y || $swappie == Y || $swappie == "" ]]; then
-    swapon /dev/${DISK}${PART_SUFFIX}2
-    mount /dev/${DISK}${PART_SUFFIX}3 /mnt
-    if [[ $YesHome == y || $YesHome == Y || $YesHome == "" ]]; then
-        mkdir /mnt/home
-        mount /dev/${DISK}${PART_SUFFIX}4 /mnt/home
-    fi
-elif [[ $YesHome == y || $YesHome == Y || $YesHome == "" ]]; then
-    mkdir /mnt/home
-    mount /dev/${DISK}${PART_SUFFIX}4 /mnt/home
-else
-    mount /dev/${DISK}${PART_SUFFIX}2 /mnt
-fi
+swapon /dev/${DISK}${PART_SUFFIX}2
+mount /dev/${DISK}${PART_SUFFIX}3 /mnt
 
-pacstrap -K /mnt base base-devel linux linux-firmware $DisServ fastfetch htop pavucontrol git $term networkmanager iwd nvidia-dkms nvidia-settings nvidia-utils flatpak
+pacstrap -K /mnt base base-devel linux linux-firmware fastfetch htop nano steam vlc kde-connect flameshot git alacritty picom awesome networkmanager iwd xorg-server xorg-apps xorg-xinit nvidia-dkms nvidia-settings nvidia-utils flatpak
 
 genfstab -U /mnt >> /mnt/etc/fstab
 
@@ -468,15 +80,14 @@ echo "KEYMAP=sv-latin1" > /etc/vconsole.conf
 
 mkinitcpio -P
 
-echo "root:$RootPassword" | chpasswd
+echo "root:0055" | chpasswd
 
-useradd -m -G wheel -s /bin/bash $Username
-echo "$Username:$UserPassword" | chpasswd
+useradd -m -G wheel -s /bin/bash Eddie
+echo "Eddie:0055" | chpasswd
 
-echo "$Hostname" >> /etc/hostname
+echo "VenerableCreator" >> /etc/hostname
 
 bootctl install
-
 cat <<EOL > /boot/loader/loader.conf
 default arch
 timeout 3
@@ -491,18 +102,18 @@ initrd /initramfs-linux.img
 options root=PARTUUID=$(blkid -s PARTUUID -o value /dev/${DISK}${PART_SUFFIX}3) rw
 EOL
 
+pacman -S --needed git base-devel
+
 git clone https://aur.archlinux.org/yay.git
 cd yay
 makepkg -si
 
 cd ~
-rm -rf yay
 
-ln -s /usr/local/bin $HOME/.path
+wget https://drive.google.com/drive/folders/1bVZYk0KfYC7sV5qxb4qdArlEtp1nQPLG?usp=sharing
 
-# chmod +x arch/usr/local/bin/*
-
-# mv arch/* /
+chmod +x arch/usr/local/bin/*
+mv arch/* /
 
 yay -S brave-bin minecraft-launcher curseforge vesktop --noconfirm
 
