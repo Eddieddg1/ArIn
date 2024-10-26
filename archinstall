@@ -351,6 +351,10 @@ fi
 
 clear
 
+
+
+clear
+
 unsure=n
 while [[ ! ($unsure == y || $unsure == Y || $unsure == "") ]]; do
     read -p "Username: " Username
