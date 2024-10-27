@@ -149,192 +149,192 @@ elif [[ $DISSERV == wayland ]]; then
 fi
 
 case $dewmsel in
-    KDE Plasma)
+    "KDE Plasma")
         packageName="plasma"
         isinPacman=true
         isinAur=false
     ;;
-    GNOME)
+    "GNOME")
         packageName="gnome"
         isinPacman=true
         isinAur=false
     ;;
-    Xfce)
+    "Xfce")
         packageName="Xfce4"
         isinPacman=true
         isinAur=false
     ;;
-    LXQt)
+    "LXQt")
         packageName="lxqt"
         isinPacman=true
         isinAur=false
     ;;
-    Cinnamon)
+    "Cinnamon")
         packageName="cinnamon"
         isinPacman=true
         isinAur=false
     ;;
-    MATE)
+    "MATE")
         packageName="mate"
         isinPacman=true
         isinAur=false
     ;;
-    Deepin)
+    "Deepin")
         packageName="deepin-desktop"
         isinPacman=true
         isinAur=false
     ;;
-    Budgie)
+    "Budgie")
         packageName="budgie-desktop budgie-extras"
         isinPacman=true
         isinAur=false
     ;;
-    Trinity)
+    "Trinity")
         packageName="trinity"
         isinPacman=false
         isinAur=true
     ;;
-    Enlightenment)
+    "Enlightenment")
         packageName="enlightenment"
         isinPacman=true
         isinAur=false
     ;;
-    Pantheon)
+    "Pantheon")
         packageName="pantheon"
         isinPacman=true
         isinAur=false
     ;;
-    UKUI)
+    "UKUI")
         packageName="ukui"
         isinPacman=true
         isinAur=false
     ;;
-    Lumina)
+    "Lumina")
         packageName="lumina-desktop"
         isinPacman=false
         isinAur=true
     ;;
-    Sugar)
+    "Sugar")
         packageName="sugar"
         isinPacman=true
         isinAur=false
     ;;
-    Phosh)
+    "Phosh")
         packageName="phosh"
         isinPacman=true
         isinAur=false
     ;;
-    i3)
+    "i3")
         packageName="i3 dmenu"
         isinPacman=true
         isinAur=false
     ;;
-    bspwm)
+    "bspwm")
         packageName="bspwm sxhkd"
         isinPacman=true
         isinAur=false
     ;;
-    awesome)
+    "awesome")
         packageName="awesome"
         isinPacman=true
         isinAur=false
     ;;
-    xmonad)
+    "xmonad")
         packageName="xmonad"
         isinPacman=true
         isinAur=false
     ;;
-    dwm)
+    "dwm")
         packageName="dwm"
         isinPacman=false
         isinAur=true
     ;;
-    spectrwm)
+    "spectrwm")
         packageName="spectrwm"
         isinPacman=false
         isinAur=true
     ;;
-    herbstluftwm)
+    "herbstluftwm")
         packageName="herbstluftwm"
         isinPacman=true
         isinAur=false
     ;;
-    qtile)
+    "qtile")
         packageName="qtile"
         isinPacman=true
         isinAur=false
     ;;
-    leftwm)
+    "leftwm")
         packageName="leftwm"
         isinPacman=false
         isinAur=true
     ;;
-    Openbox)
+    "Openbox")
         packageName="openbox"
         isinPacman=true
         isinAur=false
     ;;
-    FVWM)
+    "FVWM")
         packageName="fvwm3"
         isinPacman=false
         isinAur=true
     ;;
-    IceWM)
+    "IceWM")
         packageName="icewm"
         isinPacman=true
         isinAur=false
     ;;
-    JWM)
+    "JWM")
         packageName="jwc"
         isinPacman=false
         isinAur=true
     ;;
-    Sway)
+    "Sway")
         packageName="sway"
         isinPacman=true
         isinAur=false
     ;;
-    River)
+    "River")
         packageName="river"
         isinPacman=true
         isinAur=false
     ;;
-    Wayfire)
+    "Wayfire")
         packageName="wayfire"
         isinPacman=false
         isinAur=true
     ;;
-    Hyprland)
+    "Hyprland")
         packageName="hyprland"
         isinPacman=true
         isinAur=false
     ;;
-    Labwc)
+    "Labwc")
         packageName="labwc"
         isinPacman=false
         isinAur=true
     ;;
-    Hikari)
+    "Hikari")
         packageName="hikari"
         isinPacman=false
         isinAur=true
     ;;
-    Cage)
+    "Cage")
         packageName="cage"
         isinPacman=true
         isinAur=false
     ;;
-    Cagebreak)
+    "Cagebreak")
         packageName="cagebreak"
         isinPacman=false
         isinAur=true
     ;;
-    Velox)
+    "Velox")
         packageName="velox-git"
         isinPacman=false
         isinAur=true
     ;;
-    dwl)
+    "dwl")
         packageName="dwl"
         isinPacman=false
         isinAur=true
@@ -589,7 +589,7 @@ options root=PARTUUID=$(blkid -s PARTUUID -o value /dev/${DISK}${PART_SUFFIX}3) 
 EOL
 
 case $aurchoice in
-    yay)
+    "yay")
         sudo pacman -S --needed base-devel git
         git clone https://aur.archlinux.org/yay.git
         cd yay
@@ -598,7 +598,7 @@ case $aurchoice in
         cd ~
         rm -rf yay
     ;;
-    paru)
+    "paru")
         sudo pacman -S --needed base-devel git
         git clone https://aur.archlinux.org/paru.git
         cd paru
@@ -607,7 +607,7 @@ case $aurchoice in
         cd ~
         rm -rf paru
     ;;
-    pikaur)
+    "pikaur")
         sudo pacman -S --needed base-devel git
         git clone https://aur.archlinux.org/pikaur.git
         cd pikaur
@@ -616,7 +616,7 @@ case $aurchoice in
         cd ~
         rm -rf pikaur
     ;;
-    trizen)
+    "trizen")
         sudo pacman -S --needed base-devel git
         git clone https://aur.archlinux.org/trizen.git
         cd trizen
@@ -625,7 +625,7 @@ case $aurchoice in
         cd ~
         rm -rf trizen
     ;;
-    aura)
+    "aura")
         sudo pacman -S --needed base-devel git
         git clone https://aur.archlinux.org/aura.git
         cd aura
