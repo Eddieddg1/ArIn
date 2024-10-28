@@ -520,6 +520,346 @@ done
 
 clear
 
+case $langchoice in
+    "Afrikaans")
+        lang="af_ZA.UTF-8"
+        potkeymap="us"
+    ;;
+    "Albanian")
+        lang="sq_AL.UTF-8"
+        potkeymap="al"
+    ;;
+    "Arabic")
+        lang="ar_SA.UTF-8"
+        potkeymap="ar"
+    ;;
+    "Armenian")
+        lang="hy_AM.UTF-8"
+        potkeymap="am"
+    ;;
+    "Basque")
+        lang="eu_ES.UTF-8"
+        potkeymap="es"
+    ;;
+    "Belarusian")
+        lang="be_BY.UTF-8"
+        potkeymap="by"
+    ;;
+    "Bosnian")
+        lang="bs_BA.UTF-8"
+        potkeymap="ba"
+    ;;
+    "Bulgarian")
+        lang="bg_BG.UTF-8"
+        potkeymap="bg"
+    ;;
+    "Catalan")
+        lang="ca_ES.UTF-8"
+        potkeymap="es"
+    ;;
+    "Chinese (Simplified)")
+        lang="zh_CN.UTF-8"
+        potkeymap="cn"
+    ;;
+    "Chinese (Traditional)")
+        lang="zh_TW.UTF-8"
+        potkeymap="tw"
+    ;;
+    "Croatian")
+        lang="hr_HR.UTF-8"
+        potkeymap="hr"
+    ;;
+    "Czech")
+        lang="cs_CZ.UTF-8"
+        potkeymap="cz"
+    ;;
+    "Danish")
+        lang="da_DK.UTF-8"
+        potkeymap="dk"
+    ;;
+    "Dutch")
+        lang="nl_NL.UTF-8"
+        potkeymap="nl"
+    ;;
+    "English (US)")
+        lang="en_US.UTF-8"
+        potkeymap="us"
+    ;;
+    "English (UK)")
+        lang="en_GB.UTF-8"
+        potkeymap="gb"
+    ;;
+    "English (Australia)")
+        lang="en_AU.UTF-8"
+        potkeymap="aus"
+    ;;
+    "English (Canada)")
+        lang="en_CA.UTF-8"
+        potkeymap="ca"
+    ;;
+    "Finnish")
+        lang="fi_FI.UTF-8"
+        potkeymap="fi"
+    ;;
+    "French")
+        lang="fr_FR.UTF-8"
+        potkeymap="fr"
+    ;;
+    "French (Canada)")
+        lang="fr_CA.UTF-8"
+        potkeymap="ca"
+    ;;
+    "German")
+        lang="de_DE.UTF-8"
+        potkeymap="de"
+    ;;
+    "Greek")
+        lang="el_GR.UTF-8"
+        potkeymap="gr"
+    ;;
+    "Hebrew")
+        lang="he_IL.UTF-8"
+        potkeymap="il"
+    ;;
+    "Hungarian")
+        lang="hu_HU.UTF-8"
+        potkeymap="hu"
+    ;;
+    "Icelandic")
+        lang="is_IS.UTF-8"
+        potkeymap="is"
+    ;;
+    "Italian")
+        lang="it_IT.UTF-8"
+        potkeymap="it"
+    ;;
+    "Japanese")
+        lang="ja_JP.UTF-8"
+        potkeymap="jp"
+    ;;
+    "Korean")
+        lang="ko_KR.UTF-8"
+        potkeymap="kr"
+    ;;
+    "Norwegian")
+        lang="no_NO.UTF-8"
+        potkeymap="no"
+    ;;
+    "Polish")
+        lang="pl_PL.UTF-8"
+        potkeymap="pl"
+    ;;
+    "Portuguese (Portugal)")
+        lang="pt_PT.UTF-8"
+        potkeymap="pt"
+    ;;
+    "Portuguese (Brazil)")
+        lang="pt_BR.UTF-8"
+        potkeymap="br"
+    ;;
+    "Romanian")
+        lang="ro_RO.UTF-8"
+        potkeymap="ro"
+    ;;
+    "Russian")
+        lang="ru_RU.UTF-8"
+        potkeymap="ru"
+    ;;
+    "Slovak")
+        lang="sk_SK.UTF-8"
+        potkeymap="sk"
+    ;;
+    "Spanish")
+        lang="es_ES.UTF-8"
+        potkeymap="es"
+    ;;
+    "Spanish (Latin America)")
+        lang="es_MX.UTF-8"
+        potkeymap="mx"
+    ;;
+    "Swedish")
+        lang="sv_SE.UTF-8"
+        potkeymap="sv-latin1"
+    ;;
+    "Turkish")
+        lang="tr_TR.UTF-8"
+        potkeymap="tr"
+    ;;
+    "Ukrainian")
+        lang="uk_UA.UTF-8"
+        potkeymap="ua"
+    ;;
+    "Vietnamese")
+        lang="vi_VN.UTF-8"
+        potkeymap="vn"
+    ;;
+    "Thai")
+        lang="th_TH.UTF-8"
+        potkeymap="th"
+    ;;
+    "Malay")
+        lang="ms_MY.UTF-8"
+        potkeymap="ms"
+    ;;
+    "Filipino")
+        lang="fil_PH.UTF-8"
+        potkeymap="ph"
+    ;;
+    "Swahili")
+        lang="sw_TZ.UTF-8"
+        potkeymap="sw"
+    ;;
+    "Serbian (Cyrillic)")
+        lang="sr_Cyrl_RS.UTF-8"
+        potkeymap="sr-cyrl"
+    ;;
+    "Serbian (Latin)")
+        lang="sr_Latn_RS.UTF-8"
+        potkeymap="sr-latin"
+    ;;
+    "Persian")
+        lang="fa_IR.UTF-8"
+        potkeymap="fa"
+    ;;
+    "Kazakh")
+        lang="kk_KZ.UTF-8"
+        potkeymap="kk"
+    ;;
+    "Bengali")
+        lang="bn_BD.UTF-8"
+        potkeymap="bn"
+    ;;
+    "Tamil")
+        lang="ta_IN.UTF-8"
+        potkeymap="ta"
+    ;;
+    "Telugu")
+        lang="te_IN.UTF-8"
+        potkeymap="te"
+    ;;
+    "Gujarati")
+        lang="gu_IN.UTF-8"
+        potkeymap="gu"
+    ;;
+    "Marathi")
+        lang="mr_IN.UTF-8"
+        potkeymap="mr"
+    ;;
+    "Malayalam")
+        lang="ml_IN.UTF-8"
+        potkeymap="ml"
+    ;;
+    "Sinhalese")
+        lang="si_LK.UTF-8"
+        potkeymap="si"
+    ;;
+    "Khmer")
+        lang="km_KH.UTF-8"
+        potkeymap="km"
+    ;;
+    "Lao")
+        lang="lo_LA.UTF-8"
+        potkeymap="lo"
+    ;;
+    "Mongolian")
+        lang="mn_MN.UTF-8"
+        potkeymap="mn"
+    ;;
+    "Armenian (Eastern)")
+        lang="hy_AM.UTF-8"
+        potkeymap="hy"
+    ;;
+    "Armenian (Western)")
+        lang="hyw_AM.UTF-8"
+        potkeymap="hyw"
+    ;;
+    "Azerbaijani (Cyrillic)")
+        lang="az_Cyrl_AZ.UTF-8"
+        potkeymap="az"
+    ;;
+    "Azerbaijani (Latin)")
+        lang="az_Latn_AZ.UTF-8"
+        potkeymap="az"
+    ;;
+    "Tajik")
+        lang="tg_TJ.UTF-8"
+        potkeymap="tg"
+    ;;
+    "Turkmen")
+        lang="tk_TM.UTF-8"
+        potkeymap="tk"
+    ;;
+    "Kyrgyz")
+        lang="ky_KG.UTF-8"
+        potkeymap="ky"
+    ;;
+    "Uzbek (Cyrillic)")
+        lang="uz_Cyrl_UZ.UTF-8"
+        potkeymap="uz"
+    ;;
+    "Uzbek (Latin)")
+        lang="uz_Latn_UZ.UTF-8"
+        potkeymap="uz"
+    ;;
+    "Pashto")
+        lang="ps_AF.UTF-8"
+        potkeymap="ps"
+    ;;
+    "Kurdish (Kurmanji)")
+        lang="ku_TR.UTF-8"
+        potkeymap="ku"
+    ;;
+    "Kurdish (Sorani)")
+        lang="ku_IQ.UTF-8"
+        potkeymap="ku"
+    ;;
+    "Scottish Gaelic")
+        lang="gd_GB.UTF-8"
+        potkeymap="gd"
+    ;;
+    "Welsh")
+        lang="cy_GB.UTF-8"
+        potkeymap="cy"
+    ;;
+    "Irish")
+        lang="ga_IE.UTF-8"
+        potkeymap="ga"
+    ;;
+    *)
+    ;;
+esac
+
+while [[ $lang == "" ]]; do
+    clear
+    read -p "What language do you want?(LANG to view available languages): " langchoice
+    if [[ $langchoice == LANG ]]; then
+        echo "Afrikaans, Albanian, Arabic, Armenian, Basque, Belarusian, Bosnian, Bulgarian, Catalan, Chinese (Simplified), Chinese (Traditional), Croatian, Czech, Danish, Dutch, English (US), English (UK), English (Australia), English (Canada), Finnish, French, French (Canada), German, Greek, Hebrew, Hungarian, Icelandic, Italian, Japanese, Korean, Norwegian, Polish, Portuguese (Portugal), Portuguese (Brazil), Romanian, Russian, Slovak, Spanish, Spanish (Latin America), Swedish, Turkish, Ukrainian, Vietnamese, Thai, Malay, Filipino, Swahili, Serbian (Cyrillic), Serbian (Latin), Persian, Kazakh, Bengali, Tamil, Telugu, Gujarati, Marathi, Malayalam, Sinhalese, Khmer, Lao, Mongolian, Armenian (Eastern), Armenian (Western), Azerbaijani (Cyrillic), Azerbaijani (Latin), Tajik, Turkmen, Kyrgyz, Uzbek (Cyrillic), Uzbek (Latin), Pashto, Kurdish (Kurmanji), Kurdish (Sorani), Scottish Gaelic, Welsh and Irish"
+        echo ""
+        read -p "What language do you want?: " langchoice
+    fi
+    if [[ $potkeymap ]]; then
+        read -p "Do you want to use $potkeymap keymap? y/n: " localekm
+        if [[ $localekm == y || $localekm == Y || $localekm == "" ]]; then
+            keymapchoice=$potkeymap
+        fi
+    fi
+done
+
+if [[ $keymapchoice != $potkeymap ]]; then
+    while [[ $keymap == "" ]]; do
+        echo "Afrikaans, Albanian, Arabic, Armenian, Basque, Belarusian, Bosnian, Bulgarian, Catalan, Chinese (Simplified), Chinese (Traditional), Croatian, Czech, Danish, Dutch, English (US), English (UK), English (Australia), English (Canada), Finnish, French, French (Canada), German, Greek, Hebrew, Hungarian, Icelandic, Italian, Japanese, Korean, Norwegian, Polish, Portuguese (Portugal), Portuguese (Brazil), Romanian, Russian, Slovak, Spanish, Spanish (Latin America), Swedish, Turkish, Ukrainian, Vietnamese, Thai, Malay, Filipino, Swahili, Serbian (Cyrillic), Serbian (Latin), Persian, Kazakh, Bengali, Tamil, Telugu, Gujarati, Marathi, Malayalam, Sinhalese, Khmer, Lao, Mongolian, Armenian (Eastern), Armenian (Western), Azerbaijani (Cyrillic), Azerbaijani (Latin), Tajik, Turkmen, Kyrgyz, Uzbek (Cyrillic), Uzbek (Latin), Pashto, Kurdish (Kurmanji), Kurdish (Sorani), Scottish Gaelic, Welsh and Irish"
+        echo ""
+        read -p "What keymap do you want to use?: " langchoice
+        echo "$potkeymap"
+        read -p "are you sure? y/n: " kmsure
+        if [[ $kmsure == y || $kmsure == Y || $kmsure == "" ]]; then
+            keymap=$potkeymap
+        fi
+    done
+fi
+
+clear
+
 unsure=n
 while [[ ! ($unsure == y || $unsure == Y || $unsure == "") ]]; do
     read -p "Username: " Username
@@ -631,9 +971,9 @@ ln -sf /usr/share/zoneinfo/$regioncity /etc/localtime
 
 hwclock --systohc
 
-echo "LANG=en_US.UTF-8" > /etc/locale.conf
+echo "LANG=$lang" > /etc/locale.conf
 
-echo "KEYMAP=sv-latin1" > /etc/vconsole.conf
+echo "KEYMAP=$keymap" > /etc/vconsole.conf
 
 mkinitcpio -P
 
