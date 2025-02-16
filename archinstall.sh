@@ -31,11 +31,11 @@ chmod +x plasma.sh
 source plasma.sh
 elif [[ $de == "Hyprland" ]]; then
 de="hyprland"
-chmod +x script.sh
-source script.sh
+chmod +x hyprland.sh
+source hyprland.sh
 elif [[ $de == "AwesomeWM" ]]; then
 de="awesome"
-chmod +x hyprland.sh
+chmod +x awesome.sh
 source awesome.sh
 fi
 
