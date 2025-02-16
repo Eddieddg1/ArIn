@@ -23,30 +23,30 @@ chmod +x dewm.sh
 source dewm.sh
 
 chmod +x packages.sh
-source packages.sh
+#source packages.sh
 
 if [[ $de == "Plasma" ]]; then
 de="plasma"
 chmod +x plasma.sh
-source plasma.sh
+#source plasma.sh
 elif [[ $de == "Hyprland" ]]; then
 de="hyprland"
 chmod +x hyprland.sh
-source hyprland.sh
+#source hyprland.sh
 elif [[ $de == "AwesomeWM" ]]; then
 de="awesome"
 chmod +x awesome.sh
-source awesome.sh
+#source awesome.sh
 fi
 
 chmod +x wine.sh
-source wine.sh
+#source wine.sh
 
-chmod +x script.sh
-source script.sh
+#chmod +x script.sh
+#source script.sh
 
 chmod +x echo.sh
-source echo.sh
+#source echo.sh
 
 
 
