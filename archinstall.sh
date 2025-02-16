@@ -25,16 +25,16 @@ source dewm.sh
 chmod +x packages.sh
 #source packages.sh
 
-if [[ $de == "Plasma" ]]; then
-de="plasma"
+chmod +x move.sh
+./move.sh
+
+if [[ $de == "plasma" ]]; then
 chmod +x plasma.sh
 #source plasma.sh
-elif [[ $de == "Hyprland" ]]; then
-de="hyprland"
+elif [[ $de == "hyprland" ]]; then
 chmod +x hyprland.sh
 #source hyprland.sh
-elif [[ $de == "AwesomeWM" ]]; then
-de="awesome"
+elif [[ $de == "awesome" ]]; then
 chmod +x awesome.sh
 #source awesome.sh
 fi
@@ -42,11 +42,12 @@ fi
 chmod +x wine.sh
 #source wine.sh
 
+chmod +x config.sh
+#source config.sh
+
 #chmod +x script.sh
 #source script.sh
 
-chmod +x echo.sh
-#source echo.sh
 
 
 
